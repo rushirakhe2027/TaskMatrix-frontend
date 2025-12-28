@@ -59,15 +59,34 @@ const Inbox = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [currentMessages]);
 
-    const activePartner = users.find(u => u._id === activePartnerId);
+    const { conversations } = useSelector((state) => state.messages);
 
-    const handleImageSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedImage(file);
-            setImagePreview(URL.createObjectURL(file));
+    // Derive partners from populated conversations (Fast, no 'users' dependency)
+    const conversationPartners = conversations.map(msg => {
+        const sender = msg.sender || {};
+        const recipient = msg.recipient || {};
+        const senderId = sender._id || sender;
+        const recipientId = recipient._id || recipient;
+        const isMeSender = senderId === currentUser._id;
+        const partnerObj = isMeSender ? recipient : sender;
+        if (partnerObj && typeof partnerObj === 'object' && partnerObj._id) return partnerObj;
+        return users.find(u => u._id === (isMeSender ? recipientId : senderId));
+    }).filter(p => p !== undefined);
+
+    // Ensure unique partners
+    const uniquePartners = Array.from(new Set(conversationPartners.map(p => (p?._id || p))))
+        .map(id => conversationPartners.find(p => p._id === id))
+        .filter(p => p); // Remove nulls
+
+    // Resolve Active Partner (Prioritize Conversations, then Users)
+    const activePartner = uniquePartners.find(p => p._id === activePartnerId) || users.find(u => u._id === activePartnerId);
+
+    // Lazy Fetch if Active Partner is missing (e.g. New Chat from Team Page)
+    useEffect(() => {
+        if (activePartnerId && !activePartner && users.length === 0) {
+            dispatch(fetchAllUsers());
         }
-    };
+    }, [activePartnerId, activePartner, users.length, dispatch]);
 
     const removeImage = () => {
         setSelectedImage(null);
@@ -93,39 +112,6 @@ const Inbox = () => {
         }
     };
 
-    const { conversations } = useSelector((state) => state.messages);
-
-    // Derive partners from populated conversations (Fast, no 'users' dependency)
-    const conversationPartners = conversations.map(msg => {
-        const sender = msg.sender || {};
-        const recipient = msg.recipient || {};
-
-        // Check if populated (has _id and name)
-        const senderId = sender._id || sender;
-        const recipientId = recipient._id || recipient;
-
-        const isMeSender = senderId === currentUser._id;
-        const partnerObj = isMeSender ? recipient : sender;
-
-        // Verify it is an object (populated)
-        if (partnerObj && typeof partnerObj === 'object' && partnerObj._id) {
-            return partnerObj;
-        }
-
-        // Fallback (Rare case if population failed)
-        const pId = isMeSender ? recipientId : senderId;
-        return users.find(u => u._id === pId);
-    }).filter(p => p !== undefined);
-
-    // Ensure unique partners
-    const uniquePartners = Array.from(new Set(conversationPartners.map(p => p._id)))
-        .map(id => conversationPartners.find(p => p._id === id));
-
-    // Add active partner if not present (Fake Conversation)
-    if (activePartnerId && !uniquePartners.find(p => p._id === activePartnerId)) {
-        const active = users.find(u => u._id === activePartnerId);
-        if (active) uniquePartners.unshift(active);
-    }
 
     const filteredUsers = uniquePartners.filter(u =>
         u._id !== currentUser._id &&
