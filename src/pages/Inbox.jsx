@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllUsers } from '../redux/slices/userSlice';
-import { fetchMessages, sendMessageAsync, addMessage } from '../redux/slices/messageSlice';
+import { fetchMessages, sendMessageAsync, addMessage, fetchConversations } from '../redux/slices/messageSlice';
 import {
     Search,
     Send,
@@ -41,6 +41,7 @@ const Inbox = () => {
 
     useEffect(() => {
         dispatch(fetchAllUsers());
+        dispatch(fetchConversations());
     }, [dispatch]);
 
     useEffect(() => {
@@ -87,7 +88,27 @@ const Inbox = () => {
         }
     };
 
-    const filteredUsers = users.filter(u =>
+    const { conversations } = useSelector((state) => state.messages);
+
+    // Derive partners from conversations
+    const conversationPartners = conversations.map(msg => {
+        const senderId = typeof msg.sender === 'object' ? msg.sender._id : msg.sender;
+        const recipientId = typeof msg.recipient === 'object' ? msg.recipient._id : msg.recipient;
+        const partnerId = senderId === currentUser._id ? recipientId : senderId;
+        return users.find(u => u._id === partnerId);
+    }).filter(p => p !== undefined);
+
+    // Ensure unique partners
+    const uniquePartners = Array.from(new Set(conversationPartners.map(p => p._id)))
+        .map(id => conversationPartners.find(p => p._id === id));
+
+    // Add active partner if not present (Fake Conversation)
+    if (activePartnerId && !uniquePartners.find(p => p._id === activePartnerId)) {
+        const active = users.find(u => u._id === activePartnerId);
+        if (active) uniquePartners.unshift(active);
+    }
+
+    const filteredUsers = uniquePartners.filter(u =>
         u._id !== currentUser._id &&
         (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.email.toLowerCase().includes(searchQuery.toLowerCase()))
     );
@@ -254,7 +275,8 @@ const Inbox = () => {
                                 {inputText.trim() || selectedImage ? (
                                     <button
                                         type="submit"
-                                        className="w-9 h-9 md:w-10 md:h-10 bg-[#121212] text-white rounded-xl shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0"
+                                        disabled={loading}
+                                        className="w-9 h-9 md:w-10 md:h-10 bg-[#121212] text-white rounded-xl shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Send size={15} />
                                     </button>

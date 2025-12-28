@@ -66,8 +66,15 @@ const messageSlice = createSlice({
             .addCase(fetchProjectMessages.fulfilled, (state, action) => {
                 state.currentMessages = action.payload.data.messages;
             })
+            .addCase(sendMessageAsync.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(sendMessageAsync.fulfilled, (state, action) => {
+                state.loading = false;
                 state.currentMessages.push(action.payload.data.message);
+            })
+            .addCase(sendMessageAsync.rejected, (state) => {
+                state.loading = false;
             });
     },
 });
