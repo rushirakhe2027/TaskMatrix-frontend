@@ -80,8 +80,6 @@ const Landing = () => {
                 </div>
                 <div className="hidden md:flex items-center gap-10">
                     <a href="#features" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-black transition-colors">Features</a>
-                    <a href="#pricing" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-black transition-colors">Pricing</a>
-                    <a href="#about" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-black transition-colors">About</a>
                 </div>
                 <div className="flex items-center gap-4">
                     <button
@@ -137,9 +135,6 @@ const Landing = () => {
                                         className="px-8 py-5 bg-black text-white rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-all shadow-2xl"
                                     >
                                         Start for Free
-                                    </button>
-                                    <button className="px-8 py-5 bg-white border-2 border-slate-900 text-black rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-3 hover:bg-slate-50 transition-all">
-                                        <Play size={16} fill="black" /> Watch Demo
                                     </button>
                                 </motion.div>
 
