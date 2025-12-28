@@ -63,6 +63,21 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload.message;
             })
+            .addCase(signup.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(signup.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.data.user;
+                state.token = action.payload.token;
+                localStorage.setItem('token', action.payload.token);
+                localStorage.setItem('refreshToken', action.payload.refreshToken);
+                localStorage.setItem('user', JSON.stringify(action.payload.data.user));
+            })
+            .addCase(signup.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || 'Signup failed';
+            })
             .addCase(fetchMe.fulfilled, (state, action) => {
                 state.user = action.payload.data.user;
                 localStorage.setItem('user', JSON.stringify(action.payload.data.user));
