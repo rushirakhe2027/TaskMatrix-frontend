@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllUsers } from '../redux/slices/userSlice';
 import { fetchMessages, sendMessageAsync, addMessage } from '../redux/slices/messageSlice';
@@ -28,7 +29,15 @@ const Inbox = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
+    const [searchParams] = useSearchParams();
+    const urlPartnerId = searchParams.get('partnerId');
     const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        if (urlPartnerId) {
+            setActivePartnerId(urlPartnerId);
+        }
+    }, [urlPartnerId]);
 
     useEffect(() => {
         dispatch(fetchAllUsers());

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../redux/slices/userSlice';
+import { Link } from 'react-router-dom';
 import { Users, Mail, Phone, MessageSquare, Plus, Search, Filter, MoreVertical, ShieldCheck, MailCheck, Star } from 'lucide-react';
 
 const Team = () => {
@@ -67,22 +68,16 @@ const Team = () => {
                                 </div>
 
                                 <div className="flex justify-center gap-3 relative z-10">
-                                    {[Mail, Phone, MessageSquare].map((Icon, idx) => (
-                                        <button key={idx} className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-50 hover:bg-[#1e1e1e] hover:text-white transition-all shadow-sm flex items-center justify-center text-slate-400">
-                                            <Icon size={16} />
-                                        </button>
-                                    ))}
+                                    <Link
+                                        to={`/inbox?partnerId=${member._id}`}
+                                        className="w-12 h-12 rounded-2xl bg-[#1e1e1e] text-white hover:scale-110 hover:shadow-xl hover:shadow-slate-900/20 transition-all shadow-md flex items-center justify-center"
+                                    >
+                                        <MessageSquare size={18} />
+                                    </Link>
                                 </div>
                             </div>
                         ))}
 
-                        <div className="premium-card p-10 flex flex-col justify-center items-center text-center border-4 border-dashed border-slate-100 bg-slate-50/30 hover:bg-white hover:border-slate-200 transition-all cursor-pointer group">
-                            <div className="w-16 h-16 rounded-[1.5rem] bg-white flex items-center justify-center text-slate-300 group-hover:scale-110 transition-all shadow-md mb-6">
-                                <Plus size={32} />
-                            </div>
-                            <h3 className="text-lg font-black text-slate-900 tracking-tight">Expand Workspace</h3>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 px-6">Add high-performance talent to your collective</p>
-                        </div>
                     </div>
 
                     {/* Directory Section */}
