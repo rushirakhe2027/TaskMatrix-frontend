@@ -278,9 +278,8 @@ const Landing = () => {
                             <p className="mt-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 italic">14-day free trial. No credit card.</p>
                         </section>
 
-                        <footer className="py-12 border-t border-slate-100 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <footer className="py-12 border-t border-slate-100 px-6 md:px-12 flex justify-center">
                             <div className="text-xs font-black uppercase italic">TaskMatrix</div>
-                            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">© 2025 Antigravity. Project orchestration engine.</div>
                         </footer>
                     </motion.div>
                 ) : (
