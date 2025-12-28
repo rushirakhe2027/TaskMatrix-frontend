@@ -12,9 +12,8 @@
 
 @layer base {
   body {
-    @apply text-slate-800 bg-[#f8fafc] font-sans antialiased overflow-hidden min-h-screen;
+    @apply text-slate-800 bg-[#f8fafc] font-sans antialiased min-h-screen;
     font-size: 13px;
-    /* Global reduction */
   }
 }
 
@@ -44,25 +43,4 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-slate-200 rounded-full hover:bg-slate-300;
   }
-}
-
-/* Reduced spacing for all grid/flex containers */
-.gap-6 {
-  gap: 1rem !important;
-}
-
-.gap-8 {
-  gap: 1.5rem !important;
-}
-
-.p-8 {
-  padding: 1.5rem !important;
-}
-
-.mb-8 {
-  margin-bottom: 1.5rem !important;
-}
-
-.mb-10 {
-  margin-bottom: 2rem !important;
 }
