@@ -24,7 +24,12 @@ import { io } from 'socket.io-client';
 import { motion, AnimatePresence } from 'framer-motion';
 import API from '../../api/axios';
 
-const socket = io(import.meta.env.VITE_WS_URL || 'http://localhost:5000');
+// Fallback to production URL if env var fails
+const SOCKET_URL = import.meta.env.VITE_WS_URL || 'https://task-matrix-backend.vercel.app';
+const socket = io(SOCKET_URL, {
+    transports: ['polling'], // Force polling for Vercel serverless compatibility
+    withCredentials: true
+});
 
 const ProjectOverview = ({ project, onEdit }) => {
     const dispatch = useDispatch();
