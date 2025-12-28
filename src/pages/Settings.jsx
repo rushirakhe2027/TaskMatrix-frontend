@@ -90,7 +90,7 @@ const Settings = () => {
                             <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                                 <div className="w-24 h-24 rounded-[2.5rem] p-1 border-4 border-slate-50 shadow-xl overflow-hidden bg-slate-100 relative">
                                     <img
-                                        src={photoPreview || (user?.photo && user.photo !== 'default.jpg' ? `http://localhost:5000/img/users/${user.photo}` : `https://ui-avatars.com/api/?name=${user?.name}&background=1e1e1e&color=fff`)}
+                                        src={photoPreview || (user?.photo && user.photo !== 'default.jpg' ? `https://task-matrix-backend.vercel.app/img/users/${user.photo}` : `https://ui-avatars.com/api/?name=${user?.name}&background=1e1e1e&color=fff`)}
                                         className="w-full h-full object-cover rounded-[2rem]"
                                         alt="avatar"
                                     />
