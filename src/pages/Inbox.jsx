@@ -40,9 +40,14 @@ const Inbox = () => {
     }, [urlPartnerId]);
 
     useEffect(() => {
-        dispatch(fetchAllUsers());
         dispatch(fetchConversations());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (searchQuery) { // Lazy load all users only when searching
+            if (users.length === 0) dispatch(fetchAllUsers());
+        }
+    }, [searchQuery, dispatch, users.length]);
 
     useEffect(() => {
         if (activePartnerId) {
@@ -90,12 +95,26 @@ const Inbox = () => {
 
     const { conversations } = useSelector((state) => state.messages);
 
-    // Derive partners from conversations
+    // Derive partners from populated conversations (Fast, no 'users' dependency)
     const conversationPartners = conversations.map(msg => {
-        const senderId = typeof msg.sender === 'object' ? msg.sender._id : msg.sender;
-        const recipientId = typeof msg.recipient === 'object' ? msg.recipient._id : msg.recipient;
-        const partnerId = senderId === currentUser._id ? recipientId : senderId;
-        return users.find(u => u._id === partnerId);
+        const sender = msg.sender || {};
+        const recipient = msg.recipient || {};
+
+        // Check if populated (has _id and name)
+        const senderId = sender._id || sender;
+        const recipientId = recipient._id || recipient;
+
+        const isMeSender = senderId === currentUser._id;
+        const partnerObj = isMeSender ? recipient : sender;
+
+        // Verify it is an object (populated)
+        if (partnerObj && typeof partnerObj === 'object' && partnerObj._id) {
+            return partnerObj;
+        }
+
+        // Fallback (Rare case if population failed)
+        const pId = isMeSender ? recipientId : senderId;
+        return users.find(u => u._id === pId);
     }).filter(p => p !== undefined);
 
     // Ensure unique partners
