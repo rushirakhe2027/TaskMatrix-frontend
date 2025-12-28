@@ -198,7 +198,7 @@ const Navbar = () => {
                     </div>
                     <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-200 shadow-md group-hover:scale-110 transition-all duration-500">
                         <img
-                            src={user?.photo && user.photo !== 'default.jpg' ? `https://task-matrix-backend.vercel.app/img/users/${user.photo}` : `https://ui-avatars.com/api/?name=${user?.name}&background=121212&color=fff`}
+                            src={user?.photo && user.photo !== 'default.jpg' ? (user.photo.startsWith('data:') || user.photo.startsWith('http') ? user.photo : `https://task-matrix-backend.vercel.app/img/users/${user.photo}`) : `https://ui-avatars.com/api/?name=${user?.name}&background=121212&color=fff`}
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />
