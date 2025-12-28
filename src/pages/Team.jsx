@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../redux/slices/userSlice';
-import { Link } from 'react-router-dom';
 import { Users, Mail, Phone, MessageSquare, Plus, Search, Filter, MoreVertical, ShieldCheck, MailCheck, Star } from 'lucide-react';
 
 const Team = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { users, loading } = useSelector((state) => state.users);
     const { user: currentUser } = useSelector((state) => state.auth);
     const [search, setSearch] = useState('');
@@ -68,12 +69,13 @@ const Team = () => {
                                 </div>
 
                                 <div className="flex justify-center gap-3 relative z-10">
-                                    <Link
-                                        to={`/inbox?partnerId=${member._id}`}
-                                        className="w-12 h-12 rounded-2xl bg-[#1e1e1e] text-white hover:scale-110 hover:shadow-xl hover:shadow-slate-900/20 transition-all shadow-md flex items-center justify-center"
+                                    <button
+                                        onClick={() => navigate('/inbox')}
+                                        className="w-12 h-12 rounded-2xl bg-black text-white hover:scale-110 transition-all shadow-lg shadow-black/20 flex items-center justify-center"
+                                        title="Send Message"
                                     >
                                         <MessageSquare size={18} />
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
                         ))}

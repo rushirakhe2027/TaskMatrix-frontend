@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllUsers } from '../redux/slices/userSlice';
-import { fetchMessages, sendMessageAsync, addMessage, fetchConversations } from '../redux/slices/messageSlice';
+import { fetchMessages, sendMessageAsync, addMessage } from '../redux/slices/messageSlice';
 import {
     Search,
     Send,
@@ -20,7 +19,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Inbox = () => {
     const dispatch = useDispatch();
     const { user: currentUser } = useSelector((state) => state.auth);
-    const { users, loading: usersLoading } = useSelector((state) => state.users);
+    const { users } = useSelector((state) => state.users);
     const { currentMessages, loading } = useSelector((state) => state.messages);
 
     const [activePartnerId, setActivePartnerId] = useState(null);
@@ -29,25 +28,11 @@ const Inbox = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
-    const [searchParams] = useSearchParams();
-    const urlPartnerId = searchParams.get('partnerId');
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        if (urlPartnerId) {
-            setActivePartnerId(urlPartnerId);
-        }
-    }, [urlPartnerId]);
-
-    useEffect(() => {
-        dispatch(fetchConversations());
+        dispatch(fetchAllUsers());
     }, [dispatch]);
-
-    useEffect(() => {
-        if (searchQuery && !usersLoading) { // Lazy load all users only when searching
-            if (users.length === 0) dispatch(fetchAllUsers());
-        }
-    }, [searchQuery, dispatch, users.length, usersLoading]);
 
     useEffect(() => {
         if (activePartnerId) {
@@ -59,36 +44,15 @@ const Inbox = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [currentMessages]);
 
-    const { conversations } = useSelector((state) => state.messages);
+    const activePartner = users.find(u => u._id === activePartnerId);
 
-    // Derive partners from populated conversations (Fast, no 'users' dependency)
-    const conversationPartners = React.useMemo(() => conversations.map(msg => {
-        const sender = msg.sender || {};
-        const recipient = msg.recipient || {};
-        const senderId = sender._id || sender;
-        const recipientId = recipient._id || recipient;
-        const isMeSender = senderId === currentUser._id;
-        const partnerObj = isMeSender ? recipient : sender;
-        if (partnerObj && typeof partnerObj === 'object' && partnerObj._id) return partnerObj;
-        return users.find(u => u._id === (isMeSender ? recipientId : senderId));
-    }).filter(p => p !== undefined), [conversations, currentUser._id, users]);
-
-    // Ensure unique partners
-    const uniquePartners = React.useMemo(() => Array.from(new Set(conversationPartners.map(p => (p?._id || p))))
-        .map(id => conversationPartners.find(p => p._id === id))
-        .filter(p => p), [conversationPartners]);
-
-    // Resolve Active Partner (Prioritize Conversations, then Users)
-    const activePartner = React.useMemo(() =>
-        uniquePartners.find(p => p._id === activePartnerId) || users.find(u => u._id === activePartnerId),
-        [uniquePartners, users, activePartnerId]);
-
-    // Lazy Fetch if Active Partner is missing (e.g. New Chat from Team Page)
-    useEffect(() => {
-        if (activePartnerId && !activePartner && users.length === 0 && !usersLoading) {
-            dispatch(fetchAllUsers());
+    const handleImageSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedImage(file);
+            setImagePreview(URL.createObjectURL(file));
         }
-    }, [activePartnerId, activePartner, users.length, usersLoading, dispatch]);
+    };
 
     const removeImage = () => {
         setSelectedImage(null);
@@ -114,11 +78,10 @@ const Inbox = () => {
         }
     };
 
-
-    const filteredUsers = React.useMemo(() => uniquePartners.filter(u =>
+    const filteredUsers = users.filter(u =>
         u._id !== currentUser._id &&
         (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.email.toLowerCase().includes(searchQuery.toLowerCase()))
-    ), [uniquePartners, currentUser._id, searchQuery]);
+    );
 
     return (
         <div className="flex h-[calc(100vh-140px)] md:h-[calc(100vh-120px)] bg-white md:rounded-2xl md:shadow-xl overflow-hidden md:border border-slate-100 animate-in fade-in duration-700">
@@ -282,8 +245,7 @@ const Inbox = () => {
                                 {inputText.trim() || selectedImage ? (
                                     <button
                                         type="submit"
-                                        disabled={loading}
-                                        className="w-9 h-9 md:w-10 md:h-10 bg-[#121212] text-white rounded-xl shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-9 h-9 md:w-10 md:h-10 bg-[#121212] text-white rounded-xl shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0"
                                     >
                                         <Send size={15} />
                                     </button>
