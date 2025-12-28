@@ -4,14 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTaskAsync } from '../../redux/slices/taskSlice';
 import { fetchProjectMessages, sendMessageAsync, addMessage } from '../../redux/slices/messageSlice';
-import { io } from 'socket.io-client';
+import { io } from '../../utils/socketMock'; // Use Mock Socket for Vercel
 
-// Fallback to production URL if env var fails
-const SOCKET_URL = import.meta.env.VITE_WS_URL || 'https://task-matrix-backend.vercel.app';
-const socket = io(SOCKET_URL, {
-    transports: ['polling'], // Force polling for Vercel serverless compatibility
-    withCredentials: true
-});
+const socket = io();
 
 const ProjectDetails = ({ isOpen, onClose, task, projectMembers = [], projectId, projectTitle }) => {
     const dispatch = useDispatch();

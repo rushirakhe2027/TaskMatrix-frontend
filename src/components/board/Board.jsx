@@ -2,36 +2,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext } from '@hello-pangea/dnd';
-import { io } from 'socket.io-client';
-import { createTaskAsync, fetchBoardTasks, localTaskMove, taskUpdated, updateTaskAsync, taskDeleted } from '../../redux/slices/taskSlice';
-import { fetchProjectBoards, fetchProjectById, updateProject } from '../../redux/slices/projectSlice';
-import { fetchAllUsers } from '../../redux/slices/userSlice';
-import Column from './Column';
-import ProjectDetails from '../layout/ProjectDetails';
-import ProjectOverview from '../project/ProjectOverview';
-import ProjectModal from '../layout/ProjectModal';
-import {
-    Plus,
-    Search,
-    Filter,
-    Layout as LayoutIcon,
-    List,
-    Calendar,
-    Share2,
-    CalendarDays,
-    Settings,
-    Bell,
-    Mail,
-    Home
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { io } from '../../utils/socketMock'; // Use Mock Socket for Vercel
 
-// Fallback to production URL if env var fails
-const SOCKET_URL = import.meta.env.VITE_WS_URL || 'https://task-matrix-backend.vercel.app';
-const socket = io(SOCKET_URL, {
-    transports: ['polling'], // Force polling for Vercel serverless compatibility
-    withCredentials: true
-});
+const socket = io();
 
 const Board = () => {
     const { projectId } = useParams();

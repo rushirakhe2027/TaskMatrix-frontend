@@ -20,16 +20,9 @@ import {
 } from 'lucide-react';
 import { updateProject, fetchProjectById } from '../../redux/slices/projectSlice';
 import { fetchProjectMessages, sendMessageAsync, addMessage } from '../../redux/slices/messageSlice';
-import { io } from 'socket.io-client';
-import { motion, AnimatePresence } from 'framer-motion';
-import API from '../../api/axios';
+import { io } from '../../utils/socketMock'; // Use Mock Socket for Vercel
 
-// Fallback to production URL if env var fails
-const SOCKET_URL = import.meta.env.VITE_WS_URL || 'https://task-matrix-backend.vercel.app';
-const socket = io(SOCKET_URL, {
-    transports: ['polling'], // Force polling for Vercel serverless compatibility
-    withCredentials: true
-});
+const socket = io();
 
 const ProjectOverview = ({ project, onEdit }) => {
     const dispatch = useDispatch();
