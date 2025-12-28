@@ -6,7 +6,12 @@ import { updateTaskAsync } from '../../redux/slices/taskSlice';
 import { fetchProjectMessages, sendMessageAsync, addMessage } from '../../redux/slices/messageSlice';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+// Fallback to production URL if env var fails
+const SOCKET_URL = import.meta.env.VITE_WS_URL || 'https://task-matrix-backend.vercel.app';
+const socket = io(SOCKET_URL, {
+    transports: ['polling'], // Force polling for Vercel serverless compatibility
+    withCredentials: true
+});
 
 const ProjectDetails = ({ isOpen, onClose, task, projectMembers = [], projectId, projectTitle }) => {
     const dispatch = useDispatch();
