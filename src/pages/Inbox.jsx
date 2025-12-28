@@ -20,7 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Inbox = () => {
     const dispatch = useDispatch();
     const { user: currentUser } = useSelector((state) => state.auth);
-    const { users } = useSelector((state) => state.users);
+    const { users, loading: usersLoading } = useSelector((state) => state.users);
     const { currentMessages, loading } = useSelector((state) => state.messages);
 
     const [activePartnerId, setActivePartnerId] = useState(null);
@@ -44,10 +44,10 @@ const Inbox = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        if (searchQuery) { // Lazy load all users only when searching
+        if (searchQuery && !usersLoading) { // Lazy load all users only when searching
             if (users.length === 0) dispatch(fetchAllUsers());
         }
-    }, [searchQuery, dispatch, users.length]);
+    }, [searchQuery, dispatch, users.length, usersLoading]);
 
     useEffect(() => {
         if (activePartnerId) {
@@ -62,7 +62,7 @@ const Inbox = () => {
     const { conversations } = useSelector((state) => state.messages);
 
     // Derive partners from populated conversations (Fast, no 'users' dependency)
-    const conversationPartners = conversations.map(msg => {
+    const conversationPartners = React.useMemo(() => conversations.map(msg => {
         const sender = msg.sender || {};
         const recipient = msg.recipient || {};
         const senderId = sender._id || sender;
@@ -71,22 +71,24 @@ const Inbox = () => {
         const partnerObj = isMeSender ? recipient : sender;
         if (partnerObj && typeof partnerObj === 'object' && partnerObj._id) return partnerObj;
         return users.find(u => u._id === (isMeSender ? recipientId : senderId));
-    }).filter(p => p !== undefined);
+    }).filter(p => p !== undefined), [conversations, currentUser._id, users]);
 
     // Ensure unique partners
-    const uniquePartners = Array.from(new Set(conversationPartners.map(p => (p?._id || p))))
+    const uniquePartners = React.useMemo(() => Array.from(new Set(conversationPartners.map(p => (p?._id || p))))
         .map(id => conversationPartners.find(p => p._id === id))
-        .filter(p => p); // Remove nulls
+        .filter(p => p), [conversationPartners]);
 
     // Resolve Active Partner (Prioritize Conversations, then Users)
-    const activePartner = uniquePartners.find(p => p._id === activePartnerId) || users.find(u => u._id === activePartnerId);
+    const activePartner = React.useMemo(() =>
+        uniquePartners.find(p => p._id === activePartnerId) || users.find(u => u._id === activePartnerId),
+        [uniquePartners, users, activePartnerId]);
 
     // Lazy Fetch if Active Partner is missing (e.g. New Chat from Team Page)
     useEffect(() => {
-        if (activePartnerId && !activePartner && users.length === 0) {
+        if (activePartnerId && !activePartner && users.length === 0 && !usersLoading) {
             dispatch(fetchAllUsers());
         }
-    }, [activePartnerId, activePartner, users.length, dispatch]);
+    }, [activePartnerId, activePartner, users.length, usersLoading, dispatch]);
 
     const removeImage = () => {
         setSelectedImage(null);
@@ -113,10 +115,10 @@ const Inbox = () => {
     };
 
 
-    const filteredUsers = uniquePartners.filter(u =>
+    const filteredUsers = React.useMemo(() => uniquePartners.filter(u =>
         u._id !== currentUser._id &&
         (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.email.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    ), [uniquePartners, currentUser._id, searchQuery]);
 
     return (
         <div className="flex h-[calc(100vh-140px)] md:h-[calc(100vh-120px)] bg-white md:rounded-2xl md:shadow-xl overflow-hidden md:border border-slate-100 animate-in fade-in duration-700">
