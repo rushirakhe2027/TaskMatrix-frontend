@@ -107,7 +107,7 @@ const Landing = () => {
                         className="relative"
                     >
                         {/* Hero Section */}
-                        <section className="pt-20 pb-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+                        <section className="pt-20 pb-12 px-6 md:px-12 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
                             <div className="flex-1 space-y-8">
                                 <motion.div
                                     initial={{ y: 20, opacity: 0 }}
@@ -182,19 +182,9 @@ const Landing = () => {
                         </section>
 
                         {/* Social Proof */}
-                        <section className="py-20 border-y border-slate-100 bg-slate-50/30">
-                            <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mb-12">Trusted by innovative teams worldwide</p>
-                            <div className="flex flex-wrap justify-center gap-12 md:gap-24 px-6 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-                                <span className="text-2xl font-black italic">ACME</span>
-                                <span className="text-2xl font-black italic">INFINITY</span>
-                                <span className="text-2xl font-black italic">SKYNET</span>
-                                <span className="text-2xl font-black italic">BLASTOFF</span>
-                                <span className="text-2xl font-black italic">VOLTAGE</span>
-                            </div>
-                        </section>
 
                         {/* Features Section */}
-                        <section id="features" className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
+                        <section id="features" className="pt-0 pb-32 px-6 md:px-12 max-w-7xl mx-auto">
                             <div className="text-center mb-24">
                                 <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tight mb-4">Monochrome Efficiency</h2>
                                 <p className="text-slate-400 font-bold">Everything you need to streamline your workflow. Nothing you don't.</p>
