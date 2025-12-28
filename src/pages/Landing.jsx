@@ -79,7 +79,7 @@ const Landing = () => {
                     TaskMatrix
                 </div>
                 <div className="hidden md:flex items-center gap-10">
-                    <a href="#features" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-black transition-colors">Features</a>
+                    {/* No links */}
                 </div>
                 <div className="flex items-center gap-4">
                     <button
@@ -185,7 +185,7 @@ const Landing = () => {
 
                         {/* Features Section */}
                         <section id="features" className="pt-0 pb-32 px-6 md:px-12 max-w-7xl mx-auto">
-                            <div className="text-center mb-24">
+                            <div className="text-center mb-12">
                                 <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tight mb-4">Monochrome Efficiency</h2>
                                 <p className="text-slate-400 font-bold">Everything you need to streamline your workflow. Nothing you don't.</p>
                             </div>
