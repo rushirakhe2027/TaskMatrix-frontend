@@ -21,6 +21,7 @@ import {
 import { updateProject, fetchProjectById } from '../../redux/slices/projectSlice';
 import { fetchProjectMessages, sendMessageAsync, addMessage } from '../../redux/slices/messageSlice';
 import { io } from '../../utils/socketMock'; // Use Mock Socket for Vercel
+import API from '../../api/axios';
 
 const socket = io();
 
@@ -167,7 +168,7 @@ const ProjectOverview = ({ project, onEdit }) => {
                                     <img
                                         alt={project?.owner?.name}
                                         className="w-full h-full rounded-[0.8rem] object-cover"
-                                        src={project?.owner?.avatar || `https://ui-avatars.com/api/?name=${project?.owner?.name || project?.owner?.email || 'User'}&background=1e1e1e&color=fff`}
+                                        src={project?.owner?.photo || project?.owner?.avatar ? (project?.owner?.photo?.startsWith('data:') || project?.owner?.photo?.startsWith('http') ? project.owner.photo : (project?.owner?.avatar?.startsWith('data:') || project?.owner?.avatar?.startsWith('http') ? project.owner.avatar : `https://task-matrix-backend.vercel.app/img/users/${project?.owner?.photo || project?.owner?.avatar}`)) : `https://ui-avatars.com/api/?name=${project?.owner?.name || project?.owner?.email || 'User'}&background=1e1e1e&color=fff`}
                                     />
                                 </div>
                                 <div>
@@ -353,7 +354,7 @@ const ProjectOverview = ({ project, onEdit }) => {
                                 {otherMembers.slice(0, 3).map(m => (
                                     <img
                                         key={m.user?._id}
-                                        src={m.user?.avatar || `https://ui-avatars.com/api/?name=${m.user?.name}&background=random`}
+                                        src={m.user?.photo || m.user?.avatar ? (m.user?.photo?.startsWith('data:') || m.user?.photo?.startsWith('http') ? m.user.photo : (m.user?.avatar?.startsWith('data:') || m.user?.avatar?.startsWith('http') ? m.user.avatar : `https://task-matrix-backend.vercel.app/img/users/${m.user.photo || m.user.avatar}`)) : `https://ui-avatars.com/api/?name=${m.user?.name}&background=random`}
                                         className="w-9 h-9 rounded-xl border-4 border-white shadow-md ring-1 ring-slate-100"
                                         alt="member"
                                     />

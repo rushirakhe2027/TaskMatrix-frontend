@@ -117,9 +117,10 @@ const Inbox = () => {
                             <div className="relative shrink-0">
                                 <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm bg-slate-100 flex items-center justify-center border border-slate-200">
                                     <img
-                                        src={partner.photo && partner.photo !== 'default.jpg' ? (partner.photo.startsWith('data:') || partner.photo.startsWith('http') ? partner.photo : `https://task-matrix-backend.vercel.app/img/users/${partner.photo}`) : `https://ui-avatars.com/api/?name=${partner.name}&background=121212&color=fff`}
+                                        src={partner?.photo || partner?.avatar ? (partner?.photo?.startsWith('data:') || partner?.photo?.startsWith('http') ? partner.photo : (partner?.avatar?.startsWith('data:') || partner?.avatar?.startsWith('http') ? partner.avatar : `https://task-matrix-backend.vercel.app/img/users/${partner?.photo || partner?.avatar}`)) : `https://ui-avatars.com/api/?name=${partner?.name || 'User'}&background=121212&color=fff`}
                                         className="w-full h-full object-cover"
                                         alt="avatar"
+                                        loading="lazy"
                                     />
                                 </div>
                                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
@@ -153,9 +154,10 @@ const Inbox = () => {
                                 </button>
                                 <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm ring-1 ring-slate-100 border border-slate-200">
                                     <img
-                                        src={activePartner?.photo && activePartner.photo !== 'default.jpg' ? (activePartner.photo.startsWith('data:') || activePartner.photo.startsWith('http') ? activePartner.photo : `https://task-matrix-backend.vercel.app/img/users/${activePartner.photo}`) : `https://ui-avatars.com/api/?name=${activePartner?.name}&background=121212&color=fff`}
+                                        src={activePartner?.photo || activePartner?.avatar ? (activePartner?.photo?.startsWith('data:') || activePartner?.photo?.startsWith('http') ? activePartner.photo : (activePartner?.avatar?.startsWith('data:') || activePartner?.avatar?.startsWith('http') ? activePartner.avatar : `https://task-matrix-backend.vercel.app/img/users/${activePartner?.photo || activePartner?.avatar}`)) : `https://ui-avatars.com/api/?name=${activePartner?.name || 'User'}&background=121212&color=fff`}
                                         className="w-full h-full object-cover"
                                         alt="active-avatar"
+                                        loading="lazy"
                                     />
                                 </div>
                                 <div>

@@ -185,13 +185,16 @@ const Projects = () => {
                                             <p className="text-[10px] font-black text-slate-900 italic uppercase leading-none">{formatCurrency(project.price)}</p>
                                             <p className="text-[7px] font-black text-slate-300 uppercase tracking-tighter mt-1 italic">Value</p>
                                         </div>
-                                        <div className="flex -space-x-1.5">
-                                            {project.members?.slice(0, 3).map((m, i) => (
-                                                <div key={i} className="w-6 h-6 rounded-lg border-2 border-white overflow-hidden shadow-sm bg-slate-50">
-                                                    <img src={m.user?.avatar || `https://ui-avatars.com/api/?name=${m.user?.name}&background=121212&color=fff`} className="w-full h-full object-cover" alt="" />
-                                                </div>
-                                            ))}
-                                        </div>
+                                        {project.members?.slice(0, 3).map((m, i) => (
+                                            <div key={i} className="w-6 h-6 rounded-lg border-2 border-white overflow-hidden shadow-sm bg-slate-50">
+                                                <img
+                                                    src={m.user?.photo || m.user?.avatar ? (m.user?.photo?.startsWith('data:') || m.user?.photo?.startsWith('http') ? m.user.photo : (m.user?.avatar?.startsWith('data:') || m.user?.avatar?.startsWith('http') ? m.user.avatar : `https://task-matrix-backend.vercel.app/img/users/${m.user?.photo || m.user?.avatar}`)) : `https://ui-avatars.com/api/?name=${m.user?.name || 'User'}&background=121212&color=fff`}
+                                                    className="w-full h-full object-cover"
+                                                    alt=""
+                                                    loading="lazy"
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
                                 )}
                             </div>
@@ -201,7 +204,12 @@ const Projects = () => {
                                     <div className="flex -space-x-1.5">
                                         {project.members?.slice(0, 3).map((m, i) => (
                                             <div key={i} className="w-7 h-7 rounded-lg border-2 border-white overflow-hidden shadow-sm bg-slate-50">
-                                                <img src={m.user?.avatar || `https://ui-avatars.com/api/?name=${m.user?.name}&background=121212&color=fff`} className="w-full h-full object-cover" alt="" />
+                                                <img
+                                                    src={m.user?.photo || m.user?.avatar ? (m.user?.photo?.startsWith('data:') || m.user?.photo?.startsWith('http') ? m.user.photo : (m.user?.avatar?.startsWith('data:') || m.user?.avatar?.startsWith('http') ? m.user.avatar : `https://task-matrix-backend.vercel.app/img/users/${m.user?.photo || m.user?.avatar}`)) : `https://ui-avatars.com/api/?name=${m.user?.name || 'User'}&background=121212&color=fff`}
+                                                    className="w-full h-full object-cover"
+                                                    alt=""
+                                                    loading="lazy"
+                                                />
                                             </div>
                                         ))}
                                     </div>

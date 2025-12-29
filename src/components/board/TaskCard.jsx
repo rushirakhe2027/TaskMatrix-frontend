@@ -90,7 +90,7 @@ const TaskCard = ({ task, index, onClick }) => {
                                 {task.assignees?.slice(0, 2).map((member, i) => (
                                     <div key={member._id || i} className="w-6 h-6 rounded-lg border-2 border-white overflow-hidden shadow-sm bg-slate-100">
                                         <img
-                                            src={member.avatar || `https://ui-avatars.com/api/?name=${member.name || 'User'}&background=121212&color=fff`}
+                                            src={member?.photo || member?.avatar ? (member?.photo?.startsWith('data:') || member?.photo?.startsWith('http') ? member.photo : (member?.avatar?.startsWith('data:') || member?.avatar?.startsWith('http') ? member.avatar : `https://task-matrix-backend.vercel.app/img/users/${member?.photo || member?.avatar}`)) : `https://ui-avatars.com/api/?name=${member?.name || 'User'}&background=121212&color=fff`}
                                             className="w-full h-full object-cover"
                                             alt="assignee"
                                         />

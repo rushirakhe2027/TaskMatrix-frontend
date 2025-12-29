@@ -90,9 +90,10 @@ const Settings = () => {
                             <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                                 <div className="w-24 h-24 rounded-[2.5rem] p-1 border-4 border-slate-50 shadow-xl overflow-hidden bg-slate-100 relative">
                                     <img
-                                        src={photoPreview || (user?.photo && user.photo !== 'default.jpg' ? (user.photo.startsWith('data:') || user.photo.startsWith('http') ? user.photo : `https://task-matrix-backend.vercel.app/img/users/${user.photo}`) : `https://ui-avatars.com/api/?name=${user?.name}&background=1e1e1e&color=fff`)}
+                                        src={photoPreview || (user?.photo || user?.avatar ? (user?.photo?.startsWith('data:') || user?.photo?.startsWith('http') ? user.photo : (user?.avatar?.startsWith('data:') || user?.avatar?.startsWith('http') ? user.avatar : `https://task-matrix-backend.vercel.app/img/users/${user?.photo || user?.avatar}`)) : `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=1e1e1e&color=fff`)}
                                         className="w-full h-full object-cover rounded-[2rem]"
                                         alt="avatar"
+                                        loading="lazy"
                                     />
                                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <Camera className="text-white" size={24} />

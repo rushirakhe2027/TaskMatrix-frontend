@@ -220,7 +220,7 @@ const Dashboard = () => {
                                         {project.members?.slice(0, 3).map((m, i) => (
                                             <div key={m.user?._id || i} className="w-8 h-8 rounded-lg border-2 border-white overflow-hidden shadow-sm hover:z-10 transition-all hover:scale-110">
                                                 <img
-                                                    src={m.user?.avatar || `https://ui-avatars.com/api/?name=${m.user?.name}&background=121212&color=fff`}
+                                                    src={m.user?.photo || m.user?.avatar ? (m.user?.photo?.startsWith('data:') || m.user?.photo?.startsWith('http') ? m.user.photo : (m.user?.avatar?.startsWith('data:') || m.user?.avatar?.startsWith('http') ? m.user.avatar : `https://task-matrix-backend.vercel.app/img/users/${m.user?.photo || m.user?.avatar}`)) : `https://ui-avatars.com/api/?name=${m.user?.name || 'User'}&background=121212&color=fff`}
                                                     className="w-full h-full object-cover"
                                                     alt="contributor"
                                                 />

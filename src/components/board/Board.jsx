@@ -3,6 +3,37 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { io } from '../../utils/socketMock'; // Use Mock Socket for Vercel
+import {
+    Home,
+    Layout as LayoutIcon,
+    Search,
+    Plus,
+    X,
+    Settings
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Redux Actions
+import {
+    fetchProjectById,
+    fetchProjectBoards,
+    updateProject
+} from '../../redux/slices/projectSlice';
+import {
+    fetchBoardTasks,
+    taskUpdated,
+    taskDeleted,
+    localTaskMove,
+    updateTaskAsync,
+    createTaskAsync
+} from '../../redux/slices/taskSlice';
+import { fetchAllUsers } from '../../redux/slices/userSlice';
+
+// Components
+import ProjectDetails from '../layout/ProjectDetails';
+import ProjectModal from '../layout/ProjectModal';
+import ProjectOverview from '../project/ProjectOverview';
+import Column from './Column';
 
 const socket = io();
 
@@ -248,7 +279,7 @@ const Board = () => {
                         {project?.members?.slice(0, 3).map((m, i) => (
                             <img
                                 key={m.user?._id || i}
-                                src={m.user?.avatar || `https://ui-avatars.com/api/?name=${m.user?.name}&background=121212&color=fff`}
+                                src={m.user?.photo || m.user?.avatar ? (m.user?.photo?.startsWith('data:') || m.user?.photo?.startsWith('http') ? m.user.photo : (m.user?.avatar?.startsWith('data:') || m.user?.avatar?.startsWith('http') ? m.user.avatar : `https://task-matrix-backend.vercel.app/img/users/${m.user?.photo || m.user?.avatar}`)) : `https://ui-avatars.com/api/?name=${m.user?.name || 'User'}&background=121212&color=fff`}
                                 className="w-7 h-7 rounded-lg border-2 border-white shadow-sm"
                                 alt=""
                             />
@@ -306,7 +337,7 @@ const Board = () => {
                                                     onClick={() => handleAddMember(user._id)}
                                                     className="w-full flex items-center gap-3 p-2 rounded-2xl hover:bg-slate-50 text-left transition-all"
                                                 >
-                                                    <img src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=121212&color=fff`} className="w-8 h-8 rounded-xl" alt="" />
+                                                    <img src={user.photo || user.avatar ? (user.photo?.startsWith('data:') || user.photo?.startsWith('http') ? user.photo : (user.avatar?.startsWith('data:') || user.avatar?.startsWith('http') ? user.avatar : `https://task-matrix-backend.vercel.app/img/users/${user.photo || user.avatar}`)) : `https://ui-avatars.com/api/?name=${user.name}&background=121212&color=fff`} className="w-8 h-8 rounded-xl" alt="" />
                                                     <div>
                                                         <p className="text-[10px] font-black text-slate-900 uppercase">{user.name}</p>
                                                         <p className="text-[7px] text-slate-400 font-bold uppercase">{user.designation || 'Active Node'}</p>

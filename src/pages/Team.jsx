@@ -58,9 +58,10 @@ const Team = () => {
                                     <div className="relative">
                                         <div className="w-24 h-24 rounded-[2.5rem] p-1.5 border-4 border-white shadow-xl ring-2 ring-slate-100 mb-6 group-hover:scale-110 transition-transform duration-500 overflow-hidden">
                                             <img
-                                                src={member.photo && member.photo !== 'default.jpg' ? (member.photo.startsWith('data:') || member.photo.startsWith('http') ? member.photo : `https://task-matrix-backend.vercel.app/img/users/${member.photo}`) : `https://ui-avatars.com/api/?name=${member.name}&background=1e1e1e&color=fff`}
+                                                src={member?.photo || member?.avatar ? (member?.photo?.startsWith('data:') || member?.photo?.startsWith('http') ? member.photo : (member?.avatar?.startsWith('data:') || member?.avatar?.startsWith('http') ? member.avatar : `https://task-matrix-backend.vercel.app/img/users/${member?.photo || member?.avatar}`)) : `https://ui-avatars.com/api/?name=${member?.name || 'User'}&background=1e1e1e&color=fff`}
                                                 className="w-full h-full object-cover rounded-[2rem]"
                                                 alt="u"
+                                                loading="lazy"
                                             />
                                         </div>
                                     </div>
@@ -115,9 +116,10 @@ const Team = () => {
                                             <td className="p-8">
                                                 <div className="flex items-center gap-4">
                                                     <img
-                                                        src={m.photo && m.photo !== 'default.jpg' ? (m.photo.startsWith('data:') || m.photo.startsWith('http') ? m.photo : `https://task-matrix-backend.vercel.app/img/users/${m.photo}`) : `https://ui-avatars.com/api/?name=${m.name}&background=1e1e1e&color=fff`}
+                                                        src={m?.photo || m?.avatar ? (m?.photo?.startsWith('data:') || m?.photo?.startsWith('http') ? m.photo : (m?.avatar?.startsWith('data:') || m?.avatar?.startsWith('http') ? m.avatar : `https://task-matrix-backend.vercel.app/img/users/${m?.photo || m?.avatar}`)) : `https://ui-avatars.com/api/?name=${m?.name || 'User'}&background=1e1e1e&color=fff`}
                                                         className="w-10 h-10 rounded-xl"
                                                         alt="u"
+                                                        loading="lazy"
                                                     />
                                                     <div>
                                                         <p className="text-sm font-black text-slate-900">{m.name}</p>
