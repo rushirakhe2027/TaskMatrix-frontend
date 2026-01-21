@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { store } from './redux/store'
 import App from './App.jsx'
 import './index.css'
+import { AnimatePresence } from 'framer-motion'
+console.log('main.jsx: AnimatePresence type:', typeof AnimatePresence)
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

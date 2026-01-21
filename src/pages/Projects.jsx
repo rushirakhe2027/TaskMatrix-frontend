@@ -21,6 +21,9 @@ import {
 import { Link } from 'react-router-dom';
 import ProjectModal from '../components/layout/ProjectModal';
 import { motion, AnimatePresence } from 'framer-motion';
+// Safe fallback for AnimatePresence
+const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
+console.log('Projects: SafeAnimatePresence active:', !AnimatePresence);
 
 const Projects = () => {
     const dispatch = useDispatch();
@@ -232,7 +235,7 @@ const Projects = () => {
                             </button>
 
                             {/* Action Menu Dropdown */}
-                            <AnimatePresence>
+                            <SafeAnimatePresence>
                                 {activeActionMenu === project._id && (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.95 }}
@@ -251,7 +254,7 @@ const Projects = () => {
                                         </button>
                                     </motion.div>
                                 )}
-                            </AnimatePresence>
+                            </SafeAnimatePresence>
                         </div>
                     ))
                 )}

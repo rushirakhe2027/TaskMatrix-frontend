@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+// Safe fallback for AnimatePresence
+const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
+console.log('Navbar: SafeAnimatePresence active:', !AnimatePresence);
 import { fetchNotifications, markAllAsRead } from '../../redux/slices/notificationSlice';
 
 const Navbar = () => {
@@ -107,7 +110,7 @@ const Navbar = () => {
                     </button>
 
                     {/* Search Panel */}
-                    <AnimatePresence>
+                    <SafeAnimatePresence>
                         {isSearchOpen && (
                             <motion.div
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -147,10 +150,10 @@ const Navbar = () => {
                                 </div>
                             </motion.div>
                         )}
-                    </AnimatePresence>
+                    </SafeAnimatePresence>
 
                     {/* Notifications Panel */}
-                    <AnimatePresence>
+                    <SafeAnimatePresence>
                         {isNotificationsOpen && (
                             <motion.div
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -182,7 +185,7 @@ const Navbar = () => {
                                 </button>
                             </motion.div>
                         )}
-                    </AnimatePresence>
+                    </SafeAnimatePresence>
                 </div>
 
                 <div className="h-8 w-px bg-slate-100 mx-1 hidden md:block" />

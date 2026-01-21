@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, Flag, Calendar, Hash, MessageSquare, History, Send, Save, CheckCircle2, Lock } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+// AnimatePresence is imported but not used in JSX here yet.
+// If needed, use SafeAnimatePresence pattern from Board.jsx.
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTaskAsync } from '../../redux/slices/taskSlice';
 import { fetchProjectMessages, sendMessageAsync, addMessage } from '../../redux/slices/messageSlice';
@@ -65,7 +67,11 @@ const ProjectDetails = ({ isOpen, onClose, task, projectMembers = [], projectId,
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [currentMessages]);
 
-    if (!isOpen || !task) return null;
+    if (!isOpen || !task) {
+        console.log('ProjectDetails: Not rendering. isOpen:', isOpen, 'task:', !!task);
+        return null;
+    }
+    console.log('ProjectDetails: Rendering task:', task?._id);
 
     const handleSave = async () => {
         setIsSaving(true);

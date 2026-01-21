@@ -12,6 +12,9 @@ import {
     Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+// If AnimatePresence is still reported as undefined, this ensures we don't crash
+const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
+console.log('Board: SafeAnimatePresence active:', !AnimatePresence);
 
 // Redux Actions
 import {
@@ -204,6 +207,7 @@ const Board = () => {
     };
 
     const handleTaskClick = (task) => {
+        console.log('Board: Task clicked:', task?._id);
         setSelectedTask(task);
         setIsDetailsOpen(true);
     };
@@ -233,7 +237,7 @@ const Board = () => {
     return (
         <div className="flex flex-col h-full animate-in fade-in duration-700">
             {/* Task Details Modal */}
-            <AnimatePresence>
+            <SafeAnimatePresence>
                 {isDetailsOpen && (
                     <ProjectDetails
                         isOpen={isDetailsOpen}
@@ -244,7 +248,7 @@ const Board = () => {
                         projectTitle={project?.name}
                     />
                 )}
-            </AnimatePresence>
+            </SafeAnimatePresence>
 
             {/* Edit Project Modal */}
             <ProjectModal
@@ -316,7 +320,7 @@ const Board = () => {
                                 <Plus size={12} /> <span>Invite</span>
                             </button>
 
-                            <AnimatePresence>
+                            <SafeAnimatePresence>
                                 {isMemberMenuOpen && (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -347,7 +351,7 @@ const Board = () => {
                                         </div>
                                     </motion.div>
                                 )}
-                            </AnimatePresence>
+                            </SafeAnimatePresence>
                         </div>
 
                         <button
