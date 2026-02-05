@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1' : 'https://task-matrix-backend.vercel.app/api/v1');
+const getBaseUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (envUrl) {
+        return envUrl.endsWith('/api/v1') ? envUrl : `${envUrl}/api/v1`;
+    }
+    return window.location.hostname === 'localhost' 
+        ? 'http://localhost:5000/api/v1' 
+        : 'https://task-matrix-backend.vercel.app/api/v1';
+};
+
+const BASE_URL = getBaseUrl();
 
 const API = axios.create({
     baseURL: BASE_URL,
