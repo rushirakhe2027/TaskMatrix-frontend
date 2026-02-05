@@ -34,7 +34,8 @@ const Dashboard = () => {
     }, [dispatch]);
 
     const filteredProjects = useMemo(() => {
-        return projects.filter(p =>
+        const projectsList = Array.isArray(projects) ? projects : [];
+        return projectsList.filter(p =>
             p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             p.category?.toLowerCase().includes(searchTerm.toLowerCase())
         );
