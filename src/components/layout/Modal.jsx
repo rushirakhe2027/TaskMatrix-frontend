@@ -1,13 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Safe fallback for AnimatePresence
-const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
-console.log('Modal: SafeAnimatePresence active:', !AnimatePresence);
 import { X } from 'lucide-react';
 
 const Modal = ({ isOpen, onClose, title, children }) => {
     return (
-        <SafeAnimatePresence>
+        <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <motion.div
@@ -38,7 +35,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
                     </motion.div>
                 </div>
             )}
-        </SafeAnimatePresence>
+        </AnimatePresence>
     );
 };
 

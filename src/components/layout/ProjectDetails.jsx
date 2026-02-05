@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, Flag, Calendar, Hash, MessageSquare, History, Send, Save, CheckCircle2, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
-// AnimatePresence is imported but not used in JSX here yet.
-// If needed, use SafeAnimatePresence pattern from Board.jsx.
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTaskAsync } from '../../redux/slices/taskSlice';
+import { updateProjectTaskCounts } from '../../redux/slices/projectSlice';
 import { fetchProjectMessages, sendMessageAsync, addMessage } from '../../redux/slices/messageSlice';
 import { io } from '../../utils/socketMock'; // Use Mock Socket for Vercel
 
@@ -67,11 +66,7 @@ const ProjectDetails = ({ isOpen, onClose, task, projectMembers = [], projectId,
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [currentMessages]);
 
-    if (!isOpen || !task) {
-        console.log('ProjectDetails: Not rendering. isOpen:', isOpen, 'task:', !!task);
-        return null;
-    }
-    console.log('ProjectDetails: Rendering task:', task?._id);
+    if (!isOpen || !task) return null;
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -87,6 +82,16 @@ const ProjectDetails = ({ isOpen, onClose, task, projectMembers = [], projectId,
 
         try {
             await dispatch(updateTaskAsync({ id: task._id, data })).unwrap();
+            
+            // Update project stats if status changed
+            if (task.status !== status) {
+                if (status === 'done') {
+                    dispatch(updateProjectTaskCounts({ projectId, completedChange: 1 }));
+                } else if (task.status === 'done') {
+                    dispatch(updateProjectTaskCounts({ projectId, completedChange: -1 }));
+                }
+            }
+
             setShowSaveSuccess(true);
             setTimeout(() => setShowSaveSuccess(false), 2000);
         } catch (err) {

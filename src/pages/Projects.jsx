@@ -21,9 +21,6 @@ import {
 import { Link } from 'react-router-dom';
 import ProjectModal from '../components/layout/ProjectModal';
 import { motion, AnimatePresence } from 'framer-motion';
-// Safe fallback for AnimatePresence
-const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
-console.log('Projects: SafeAnimatePresence active:', !AnimatePresence);
 
 const Projects = () => {
     const dispatch = useDispatch();
@@ -203,6 +200,21 @@ const Projects = () => {
                             </div>
 
                             {viewMode === 'grid' && (
+                                <div className="space-y-3 mb-6">
+                                    <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest">
+                                        <span className="text-slate-400">Execution Progress</span>
+                                        <span className="text-slate-900 italic">{project.completedTasks || 0}/{project.totalTasks || 0} Units</span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-1 overflow-hidden">
+                                        <div 
+                                            className="bg-black h-full transition-all duration-1000" 
+                                            style={{ width: `${(project.completedTasks / project.totalTasks) * 100 || 0}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {viewMode === 'grid' && (
                                 <div className="flex items-center justify-between pt-4 border-t border-slate-50">
                                     <div className="flex -space-x-1.5">
                                         {project.members?.slice(0, 3).map((m, i) => (
@@ -235,7 +247,7 @@ const Projects = () => {
                             </button>
 
                             {/* Action Menu Dropdown */}
-                            <SafeAnimatePresence>
+                            <AnimatePresence>
                                 {activeActionMenu === project._id && (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.95 }}
@@ -254,7 +266,7 @@ const Projects = () => {
                                         </button>
                                     </motion.div>
                                 )}
-                            </SafeAnimatePresence>
+                            </AnimatePresence>
                         </div>
                     ))
                 )}

@@ -232,6 +232,33 @@ const ProjectOverview = ({ project, onEdit }) => {
                                 {project?.milestones?.filter(t => t.completed).length || 0}/{project?.milestones?.length || 0} Done
                             </span>
                         </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-6 rounded-[2rem] bg-slate-50 border border-slate-100 shadow-sm flex flex-col gap-4">
+                                <div className="flex justify-between items-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Milestone Trajectory</p>
+                                    <span className="text-[10px] font-black text-slate-900">{Math.round((project?.milestones?.filter(t => t.completed).length / project?.milestones?.length) * 100 || 0)}%</span>
+                                </div>
+                                <div className="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                    <div 
+                                        className="bg-black h-full transition-all duration-1000" 
+                                        style={{ width: `${(project?.milestones?.filter(t => t.completed).length / project?.milestones?.length) * 100 || 0}%` }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="p-6 rounded-[2rem] bg-slate-50 border border-slate-100 shadow-sm flex flex-col gap-4">
+                                <div className="flex justify-between items-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Task Deployment</p>
+                                    <span className="text-[10px] font-black text-slate-900">{project?.completedTasks || 0}/{project?.totalTasks || 0} Units</span>
+                                </div>
+                                <div className="w-full bg-white rounded-full h-1.5 overflow-hidden">
+                                    <div 
+                                        className="bg-emerald-500 h-full transition-all duration-1000" 
+                                        style={{ width: `${(project?.completedTasks / project?.totalTasks) * 100 || 0}%` }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="space-y-3">
                             {(!project?.milestones || project.milestones.length === 0) && !showMilestoneInput ? (
                                 <p className="text-slate-400 text-sm font-medium italic p-10 text-center border-4 border-dashed border-slate-50 rounded-[2.5rem] bg-slate-50/30">

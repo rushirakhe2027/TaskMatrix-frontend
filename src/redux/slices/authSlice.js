@@ -6,7 +6,7 @@ export const login = createAsyncThunk('auth/login', async (credentials, { reject
         const response = await API.post('/auth/login', credentials);
         return response.data;
     } catch (err) {
-        return rejectWithValue(err.response.data);
+        return rejectWithValue(err.response?.data || { message: 'Network error or server unreachable' });
     }
 });
 
@@ -16,7 +16,7 @@ export const signup = createAsyncThunk('auth/signup', async (userData, { rejectW
         const response = await API.post('/auth/signup', userData, config);
         return response.data;
     } catch (err) {
-        return rejectWithValue(err.response.data);
+        return rejectWithValue(err.response?.data || { message: 'Network error or server unreachable' });
     }
 });
 
@@ -25,7 +25,7 @@ export const fetchMe = createAsyncThunk('auth/fetchMe', async (_, { rejectWithVa
         const response = await API.get('/auth/me');
         return response.data;
     } catch (err) {
-        return rejectWithValue(err.response.data);
+        return rejectWithValue(err.response?.data || { message: 'Network error or server unreachable' });
     }
 });
 
@@ -61,7 +61,7 @@ const authSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload.message;
+                state.error = action.payload?.message || 'Login failed';
             })
             .addCase(signup.pending, (state) => {
                 state.loading = true;

@@ -12,15 +12,13 @@ import {
     Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// If AnimatePresence is still reported as undefined, this ensures we don't crash
-const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
-console.log('Board: SafeAnimatePresence active:', !AnimatePresence);
 
 // Redux Actions
 import {
     fetchProjectById,
     fetchProjectBoards,
-    updateProject
+    updateProject,
+    updateProjectTaskCounts
 } from '../../redux/slices/projectSlice';
 import {
     fetchBoardTasks,
@@ -190,6 +188,17 @@ const Board = () => {
         // If moving to Done, automatically finalize the status
         if (destCol?.title === 'Done') {
             updateData.status = 'done';
+            // Only update count if it wasn't already done
+            const task = tasks.find(t => t._id === draggableId);
+            if (task && task.status !== 'done') {
+                dispatch(updateProjectTaskCounts({ projectId, completedChange: 1 }));
+            }
+        } else {
+            // If moved OUT of Done (though locked now, just in case)
+            const task = tasks.find(t => t._id === draggableId);
+            if (task && task.status === 'done') {
+                dispatch(updateProjectTaskCounts({ projectId, completedChange: -1 }));
+            }
         }
 
         // Update local state for immediate feedback
@@ -207,7 +216,6 @@ const Board = () => {
     };
 
     const handleTaskClick = (task) => {
-        console.log('Board: Task clicked:', task?._id);
         setSelectedTask(task);
         setIsDetailsOpen(true);
     };
@@ -232,12 +240,13 @@ const Board = () => {
             columnId: column._id,
             order: (tasksByColumn[column._id]?.length || 0)
         }));
+        dispatch(updateProjectTaskCounts({ projectId, totalChange: 1 }));
     };
 
     return (
         <div className="flex flex-col h-full animate-in fade-in duration-700">
             {/* Task Details Modal */}
-            <SafeAnimatePresence>
+            <AnimatePresence>
                 {isDetailsOpen && (
                     <ProjectDetails
                         isOpen={isDetailsOpen}
@@ -248,7 +257,7 @@ const Board = () => {
                         projectTitle={project?.name}
                     />
                 )}
-            </SafeAnimatePresence>
+            </AnimatePresence>
 
             {/* Edit Project Modal */}
             <ProjectModal
@@ -320,7 +329,7 @@ const Board = () => {
                                 <Plus size={12} /> <span>Invite</span>
                             </button>
 
-                            <SafeAnimatePresence>
+                            <AnimatePresence>
                                 {isMemberMenuOpen && (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -351,7 +360,7 @@ const Board = () => {
                                         </div>
                                     </motion.div>
                                 )}
-                            </SafeAnimatePresence>
+                            </AnimatePresence>
                         </div>
 
                         <button

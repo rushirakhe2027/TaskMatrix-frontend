@@ -81,6 +81,13 @@ const taskSlice = createSlice({
                 state.loading = false;
                 state.tasks = action.payload.data.tasks;
             })
+            .addCase(updateTaskAsync.fulfilled, (state, action) => {
+                const updatedTask = action.payload.data.task;
+                const index = state.tasks.findIndex(t => t._id === updatedTask._id);
+                if (index !== -1) {
+                    state.tasks[index] = updatedTask;
+                }
+            })
             .addCase(createTaskAsync.fulfilled, (state, action) => {
                 state.tasks.push(action.payload.data.task);
             });

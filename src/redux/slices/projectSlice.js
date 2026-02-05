@@ -68,6 +68,18 @@ const projectSlice = createSlice({
         setCurrentProject: (state, action) => {
             state.currentProject = action.payload;
         },
+        updateProjectTaskCounts: (state, action) => {
+            const { projectId, totalChange = 0, completedChange = 0 } = action.payload;
+            const project = state.projects.find(p => p._id === projectId);
+            if (project) {
+                project.totalTasks = (project.totalTasks || 0) + totalChange;
+                project.completedTasks = (project.completedTasks || 0) + completedChange;
+            }
+            if (state.currentProject && state.currentProject._id === projectId) {
+                state.currentProject.totalTasks = (state.currentProject.totalTasks || 0) + totalChange;
+                state.currentProject.completedTasks = (state.currentProject.completedTasks || 0) + completedChange;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -108,5 +120,5 @@ const projectSlice = createSlice({
     },
 });
 
-export const { setCurrentProject } = projectSlice.actions;
+export const { setCurrentProject, updateProjectTaskCounts } = projectSlice.actions;
 export default projectSlice.reducer;

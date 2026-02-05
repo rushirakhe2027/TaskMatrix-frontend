@@ -41,11 +41,12 @@ const Dashboard = () => {
     }, [projects, searchTerm]);
 
     const taskStats = useMemo(() => {
-        const completed = tasks.filter(t => t.status === 'done').length;
-        const pending = tasks.length - completed;
-        const velocity = tasks.length > 0 ? ((completed / tasks.length) * 100).toFixed(1) : 0;
+        const completed = projects.reduce((sum, p) => sum + (p.completedTasks || 0), 0);
+        const total = projects.reduce((sum, p) => sum + (p.totalTasks || 0), 0);
+        const pending = total - completed;
+        const velocity = total > 0 ? ((completed / total) * 100).toFixed(1) : 0;
         return { completed, pending, velocity };
-    }, [tasks]);
+    }, [projects]);
 
     const colors = [
         { bg: 'bg-indigo-50/50', dot: 'bg-indigo-500', text: 'text-indigo-900', border: 'border-indigo-100' },
@@ -214,6 +215,19 @@ const Dashboard = () => {
                                 <p className="text-slate-400 font-bold text-[9px] uppercase tracking-widest opacity-60 mb-6 truncate leading-relaxed">
                                     {project.description || 'System Integration Workspace'}
                                 </p>
+
+                                <div className="space-y-2.5 mb-6">
+                                    <div className="flex justify-between items-center text-[7px] font-black uppercase tracking-widest">
+                                        <span className="text-slate-300">Workload Completion</span>
+                                        <span className="text-slate-900 italic">{project.completedTasks || 0}/{project.totalTasks || 0}</span>
+                                    </div>
+                                    <div className="w-full bg-slate-50 rounded-full h-1 overflow-hidden">
+                                        <div 
+                                            className="bg-slate-900 h-full transition-all duration-1000 shadow-[0_0_8px_rgba(0,0,0,0.1)]" 
+                                            style={{ width: `${(project.completedTasks / project.totalTasks) * 100 || 0}%` }}
+                                        />
+                                    </div>
+                                </div>
 
                                 <div className="flex items-center justify-between pt-5 border-t border-slate-50">
                                     <div className="flex -space-x-2">

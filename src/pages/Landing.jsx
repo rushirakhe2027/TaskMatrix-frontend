@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-// Safe fallback for AnimatePresence
-const SafeAnimatePresence = AnimatePresence || (({ children }) => <>{children}</>);
-console.log('Landing: SafeAnimatePresence active:', !AnimatePresence);
 import {
     Plus,
     Play,
@@ -100,7 +97,7 @@ const Landing = () => {
                 </div>
             </nav>
 
-            <SafeAnimatePresence mode="wait">
+            <AnimatePresence mode="wait">
                 {view === 'landing' ? (
                     <motion.div
                         key="landing"
@@ -412,7 +409,7 @@ const Landing = () => {
                         </div>
                     </motion.div>
                 )}
-            </SafeAnimatePresence>
+            </AnimatePresence>
         </div>
     );
 };
