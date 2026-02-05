@@ -41,8 +41,9 @@ const Dashboard = () => {
     }, [projects, searchTerm]);
 
     const taskStats = useMemo(() => {
-        const completed = projects.reduce((sum, p) => sum + (p.completedTasks || 0), 0);
-        const total = projects.reduce((sum, p) => sum + (p.totalTasks || 0), 0);
+        const projectsList = Array.isArray(projects) ? projects : [];
+        const completed = projectsList.reduce((sum, p) => sum + (p.completedTasks || 0), 0);
+        const total = projectsList.reduce((sum, p) => sum + (p.totalTasks || 0), 0);
         const pending = total - completed;
         const velocity = total > 0 ? ((completed / total) * 100).toFixed(1) : 0;
         return { completed, pending, velocity };
